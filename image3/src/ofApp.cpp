@@ -3,37 +3,45 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     img.load("ML.png");
+    int factor = 1;
+    mona.allocate(img.getWidth(),img.getHeight(),OF_IMAGE_COLOR);
+    for(int i = 0; i < img.getWidth();i++){
+      for(int j = 0; j < img.getHeight();j++){
+        int i_m_1 = ofClamp(i-1, 0, img.getWidth()-1);
+        int i_p_1 = ofClamp(i+1, 0, img.getWidth()-1);
+        int j_m_1 = ofClamp(j-1, 0, img.getHeight()-1);
+        int j_p_1 = ofClamp(j+1, 0, img.getHeight()-1);
+        int m = int(img.getColor(i,j).getBrightness());
+        int n_ = int(img.getColor(i,j_p_1).getBrightness());
+        int ne = int(img.getColor(i_p_1,j_p_1).getBrightness());
+        int e_ = int(img.getColor(i_p_1,j).getBrightness());
+        int se = int(img.getColor(i_p_1,j_m_1).getBrightness());
+        int s_ = int(img.getColor(i,j_m_1).getBrightness());
+        int sw = int(img.getColor(i_m_1,j_m_1).getBrightness());
+        int w_ = int(img.getColor(i_m_1,j).getBrightness());
+        int nw = int(img.getColor(i_m_1,j_p_1).getBrightness());
+        int oldpixel = int(img.getColor(i,j).getBrightness());
+        int newpixel = (oldpixel*factor/255) *(255/factor);   //find_closest_palette_color
+        int err = oldpixel - newpixel;
+          
+        mona.setColor(i,j, newpixel);
+        mona.setColor(i_p_1,j, e_ + err * 7 / 16 );
+        mona.setColor(i_m_1,j_p_1, nw + err * 3 / 16);
+        mona.setColor(i,j_p_1, n_+err * 5 / 16);
+        mona.setColor(i_p_1,j_p_1, ne+ err * 1 / 16);
+      }
+    }
+    mona.update();
 }
 
-//--------------------------------------------------------------
+//----------------------------1----------------------------------
 void ofApp::update(){
-    for (int x =0; x<img.getWidth(); x++){
-        for (int y=0; y<img.getHeight();y++){
-            pixel[x][y] = int(img.getColor(x,y).getBrightness());
-        }
-    }
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-        for (int x =0; x<img.getWidth(); x++){
-            for (int y=0; y<img.getHeight();y++){
-                int num = 7;
-                int oldpixel = pixel[x][y];
-                int newpixel = (oldpixel*num/255)/num;
-                pixel[x][y] = newpixel;
-                int err = oldpixel - newpixel;
-                pixel[x + 1][y] = pixel[x + 1][y] + err * 7 / 16;
-                pixel[x - 1][y + 1] = pixel[x - 1][y + 1] + err * 3 / 16;
-                pixel[x][y + 1] = pixel[x][y + 1] + err * 5 / 16;
-                pixel[x + 1][y + 1] = pixel[x + 1][y + 1] + err * 1 / 16;
-                float width = 650/img.getWidth();
-                ofSetColor(newpixel);
-                ofDrawRectangle(x, y, width,width);
-            }
-        }
-
+    mona.draw(0,0);
 }
 
 //--------------------------------------------------------------

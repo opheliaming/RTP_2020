@@ -22,7 +22,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     ofImage img;
-    ofColor c1;
-    int pixel[603][125];
+    ofImage mona;
+    //ofColor c1;
+    //int pixel[603][125];
 		
 };
