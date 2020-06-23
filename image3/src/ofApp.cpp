@@ -13,6 +13,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
         ofSeedRandom(3);
+    
         ofColor c1;
         float r = ofRandom(0,5);
         for (int i =0; i<img.getWidth(); i++){
